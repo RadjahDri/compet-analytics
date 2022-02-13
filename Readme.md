@@ -1,4 +1,4 @@
-# Compet-analytics
+# Paraglide Compet Analytics
 
 ## Description
 
