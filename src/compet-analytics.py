@@ -17,7 +17,7 @@ def main(args):
 
     for fileTrackName in os.listdir(args.tracks):
         fileTrackPath = os.path.join(args.tracks, fileTrackName)
-        igcParser = IGCParser(fileTrackPath)
+        igcParser = IGCParser(fileTrackPath, args.offset)
         track = igcParser.parse()
         if(not args.quiet):
             print("[+] Load track: %s" % track)
@@ -63,6 +63,12 @@ def argumentParsing():
 		action="store_true",
 		required=False,
 		help="Do not print script working information")
+
+	parser.add_argument("--offset",
+		type=int,
+		required=False,
+		default=0,
+		help="Hour offset in IGC files")
 
 	return parser.parse_args()
 

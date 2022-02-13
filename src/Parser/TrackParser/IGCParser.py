@@ -8,12 +8,18 @@ import re
 
 ### CONSTANTS
 RE_DATE_LINE = re.compile("HFDTEDATE:([0-9]{2})([0-9]{2})([0-9]{2})\n")
+RE_DATE_LINE2 = re.compile("HFDTE([0-9]{2})([0-9]{2})([0-9]{2})\n")
 RE_PILOT_NAME_LINE = re.compile("HFPLTPILOT:(.*)\n")
 RE_GPS_REFERENCE_LINE = re.compile("HFDTM100GPSDATUM:(.*)\n")
 RE_B_LINE = re.compile("B([0-9]{2})([0-9]{2})([0-9]{2})(.{2})(.{5})([N|S])(.{3})(.{5})([W|E])[A|V](.{5})(.{5})\n")
 
 ### CLASSES
 class IGCParser(TrackParser):
+    def __init__(self, filePath, hourOffset):
+        self.filePath = filePath
+        self.hourOffset = hourOffset
+
+
     def parse(self):
         date = None
         pilotName = None
@@ -27,6 +33,12 @@ class IGCParser(TrackParser):
                     match = RE_DATE_LINE.match(line)
                     if(not match):
                         raise RuntimeError("Parsing failed: HFDTEDATE is not valid")
+                    date = datetime.date(int(match.group(3))+2000, int(match.group(2)), int(match.group(1)))
+
+                elif(line.startswith("HFDTE")):
+                    match = RE_DATE_LINE2.match(line)
+                    if(not match):
+                        raise RuntimeError("Parsing failed: HFDTE is not valid")
                     date = datetime.date(int(match.group(3))+2000, int(match.group(2)), int(match.group(1)))
 
                 elif(line.startswith("HFPLTPILOT")):
@@ -56,7 +68,7 @@ class IGCParser(TrackParser):
         if(not match):
             raise RuntimeError("Parsing failed: B entry is not valid: %s" % line)
 
-        time = datetime.time(int(match.group(1)), int(match.group(2)), int(match.group(3)))
+        time = datetime.time(int(match.group(1)) + self.hourOffset, int(match.group(2)), int(match.group(3)))
         latDegrees = int(match.group(4))
         latMinutes = float(match.group(5)) / 1000
 

@@ -59,7 +59,7 @@ class TrackTurnpointStats:
         for turnpointIdx in range(self.nbTurnPoint):
             turnpointStats = self.getTurnpointStats(turnpointIdx)
             if(turnpointStats):
-                csvData += ",%s" % turnpointStats.time.strftime("%H:%M:%S")
+                csvData += ",%s" % turnpointStats.time.strftime("%I:%M:%S %p")
             else:
                 csvData += ","
         csvData += "\n"
