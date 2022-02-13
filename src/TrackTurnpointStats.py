@@ -32,6 +32,8 @@ class TrackTurnpointStats:
     def __lt__(self, other):
         if(len(self.turnpointsStats) != len(other.turnpointsStats)):
             return len(self.turnpointsStats) < len(other.turnpointsStats)
+        elif(self.nbTurnPoint == len(self.turnpointsStats)):
+            return self.getTurnpointStats(-2).time > other.getTurnpointStats(-2).time
         else:
             return self.getTurnpointStats(-1).time > other.getTurnpointStats(-1).time
 
@@ -54,12 +56,25 @@ class TrackTurnpointStats:
         return self.track.pilotName
 
 
-    def exportToCsv(self, ranking):
+    def exportTimeToCsv(self, ranking):
+        csvData = "%s,%d" % (self.getPilotName(), ranking)
+        for turnpointIdx in range(self.nbTurnPoint - 1):
+            turnpointStats = self.getTurnpointStats(turnpointIdx)
+            if(turnpointStats):
+                csvData += ",%s" % turnpointStats.time.strftime("%I:%M:%S %p")
+            else:
+                csvData += ","
+        csvData += "\n"
+
+        return csvData
+
+
+    def exportAltitudeToCsv(self, ranking):
         csvData = "%s,%d" % (self.getPilotName(), ranking)
         for turnpointIdx in range(self.nbTurnPoint):
             turnpointStats = self.getTurnpointStats(turnpointIdx)
             if(turnpointStats):
-                csvData += ",%s" % turnpointStats.time.strftime("%I:%M:%S %p")
+                csvData += ",%s" % turnpointStats.alt
             else:
                 csvData += ","
         csvData += "\n"

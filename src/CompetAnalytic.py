@@ -20,8 +20,8 @@ class CompetAnalytic:
         competitionTracksStats = []
         for track in self.competitorTracks:
             currentBeginSearchTime = self.task.startTime
-            trackStats = TrackTurnpointStats(track, len(self.task.turnpoints[1:-1]))
-            for turnpoint in self.task.turnpoints[1:-1]:
+            trackStats = TrackTurnpointStats(track, len(self.task.turnpoints[1:]))
+            for turnpoint in self.task.turnpoints[1:]:
                 trackPointIdx = track.searchPointInTurnpoint(turnpoint, currentBeginSearchTime, self.task.endTime)
                 if(trackPointIdx == None):
                     break
@@ -34,7 +34,7 @@ class CompetAnalytic:
         return competitionTracksStats
 
 
-    def exportToCsv(self, competitionTracksStats, outputFilePath=None):
+    def exportTimeToCsv(self, competitionTracksStats, outputFilePath=None):
         csvData = "Pilote,Classement,Start"
         for turnpointIdx in range(1, len(self.task.turnpoints) - 3):
             csvData += ",B%d" % turnpointIdx
@@ -42,7 +42,25 @@ class CompetAnalytic:
 
         ranking = 1
         for competitionTrackStats in competitionTracksStats:
-            csvData += competitionTrackStats.exportToCsv(ranking)
+            csvData += competitionTrackStats.exportTimeToCsv(ranking)
+            ranking += 1
+
+        if(outputFilePath):
+            with open(outputFilePath, "w") as outputFile:
+                outputFile.write(csvData)
+
+        return csvData
+
+
+    def exportAltitudeToCsv(self, competitionTracksStats, outputFilePath=None):
+        csvData = "Pilote,Classement,Start"
+        for turnpointIdx in range(1, len(self.task.turnpoints) - 3):
+            csvData += ",B%d" % turnpointIdx
+        csvData += ",ESS,Goal\n"
+
+        ranking = 1
+        for competitionTrackStats in competitionTracksStats:
+            csvData += competitionTrackStats.exportAltitudeToCsv(ranking)
             ranking += 1
 
         if(outputFilePath):

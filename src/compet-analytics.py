@@ -5,6 +5,9 @@ from CompetAnalytic import CompetAnalytic
 import argparse
 import os
 
+### CONSTANTS
+TIME_FILE_NAME = "time.csv"
+ALTITUDE_FILE_NAME = "altitude.csv"
 
 ### MAIN
 def main(args):
@@ -33,7 +36,10 @@ def main(args):
             print("[+] %s" % trackStats)
 
     if(args.out):
-        competAnalytic.exportToCsv(tracksStats, args.out)
+        timeCsvOutFilePath = os.path.join(args.out, TIME_FILE_NAME)
+        altCsvOutFilePath = os.path.join(args.out, ALTITUDE_FILE_NAME)
+        competAnalytic.exportTimeToCsv(tracksStats, timeCsvOutFilePath)
+        competAnalytic.exportAltitudeToCsv(tracksStats, altCsvOutFilePath)
 
 
 def argumentParsing():
@@ -52,7 +58,7 @@ def argumentParsing():
 	parser.add_argument("-o", "--out",
 		type=str,
 		required=False,
-		help="Path to output CSV file")
+		help="Path to output CSV files directory")
 
 	parser.add_argument("-p", "--print",
 		action="store_true",
