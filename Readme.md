@@ -4,6 +4,18 @@
 
 Cet outils permet d'automatiser l'extraction d'information depuis les trace GPS de pilotes durant une compétition. Il permet de récupérer pour chaque compétiteurs, les horaires de passage des balises et d'extraire le tout au format CSV.
 
+## Rendu
+
+L'export CSV permet de récupérer ce types de données.
+
+![](img/renduCsv.png)
+
+Une fois, les données traitées dans une feuille de calcul préparée voici le rendu final:
+
+![](img/renduFinal.png)
+
+Cet exemple de feuille de calcul est disponible à [`./calc/rendu.ods`](calc/rendu.ods).
+
 ## Entrées
 
 ### Task
@@ -35,3 +47,4 @@ Puis "Exporter" > "Toutes les traces en IGC"
 ![](img/cargolExport.png)
 
 Les traces se trouvent, en partant du dossier contenant le fichier .cpt: `<dossierAuNomDuCpt>/Export/Manche X/`.
+
