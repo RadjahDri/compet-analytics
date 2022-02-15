@@ -1,7 +1,8 @@
 ### CLASSES
 class Track:
-    def __init__(self, pilotName, date, gpsReference, trackPoints):
+    def __init__(self, pilotName, gliderName, date, gpsReference, trackPoints):
         self.pilotName = pilotName
+        self.gliderName = gliderName
         self.date = date
         self.gpsReference = gpsReference
         self.trackPoints = trackPoints
@@ -29,7 +30,6 @@ class Track:
             if(turnpoint.isContainTrackPoint(trackPoint)):
                 self.lastSearchTime = trackPoint.time
                 return self.lastSearchIdx
-
 
         self.lastSearchTime = self.trackPoints[0].time
         self.lastSearchIdx = 0

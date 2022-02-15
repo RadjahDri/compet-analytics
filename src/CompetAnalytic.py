@@ -35,7 +35,7 @@ class CompetAnalytic:
 
 
     def exportTimeToCsv(self, competitionTracksStats, outputFilePath=None):
-        csvData = "Pilote,Classement,Start"
+        csvData = "Pilote,Voile,Classement,Start"
         for turnpointIdx in range(1, len(self.task.turnpoints) - 3):
             csvData += ",B%d" % turnpointIdx
         csvData += ",ESS\n"
@@ -53,7 +53,7 @@ class CompetAnalytic:
 
 
     def exportAltitudeToCsv(self, competitionTracksStats, outputFilePath=None):
-        csvData = "Pilote,Classement,Start"
+        csvData = "Pilote,Voile,Classement,Start"
         for turnpointIdx in range(1, len(self.task.turnpoints) - 3):
             csvData += ",B%d" % turnpointIdx
         csvData += ",ESS,Goal\n"

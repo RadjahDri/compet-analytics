@@ -56,8 +56,12 @@ class TrackTurnpointStats:
         return self.track.pilotName
 
 
+    def getGliderName(self):
+        return self.track.gliderName
+
+
     def exportTimeToCsv(self, ranking):
-        csvData = "%s,%d" % (self.getPilotName(), ranking)
+        csvData = "%s,%s,%d" % (self.getPilotName(), self.getGliderName(), ranking)
         for turnpointIdx in range(self.nbTurnPoint - 1):
             turnpointStats = self.getTurnpointStats(turnpointIdx)
             if(turnpointStats):
@@ -70,7 +74,7 @@ class TrackTurnpointStats:
 
 
     def exportAltitudeToCsv(self, ranking):
-        csvData = "%s,%d" % (self.getPilotName(), ranking)
+        csvData = "%s,%s,%d" % (self.getPilotName(), self.getGliderName(), ranking)
         for turnpointIdx in range(self.nbTurnPoint):
             turnpointStats = self.getTurnpointStats(turnpointIdx)
             if(turnpointStats):
