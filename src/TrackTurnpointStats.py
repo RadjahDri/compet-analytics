@@ -30,6 +30,10 @@ class TrackTurnpointStats:
 
 
     def __lt__(self, other):
+        if(len(other.turnpointsStats) == 0):
+            return False
+        if(len(self.turnpointsStats) == 0):
+            return True
         if(len(self.turnpointsStats) != len(other.turnpointsStats)):
             return len(self.turnpointsStats) < len(other.turnpointsStats)
         elif(self.nbTurnPoint == len(self.turnpointsStats)):
@@ -43,7 +47,9 @@ class TrackTurnpointStats:
 
 
     def getTurnpointStats(self, turnpointIdx):
-        if(turnpointIdx < len(self.turnpointsStats)):
+        if((turnpointIdx >= 0 and turnpointIdx < len(self.turnpointsStats))
+            or (turnpointIdx < 0 and abs(turnpointIdx+1) < len(self.turnpointsStats))
+        ):
             return self.track.trackPoints[self.turnpointsStats[turnpointIdx]]
         return None
 
