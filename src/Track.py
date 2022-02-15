@@ -6,25 +6,31 @@ class Track:
         self.gpsReference = gpsReference
         self.trackPoints = trackPoints
 
+        self.lastSearchTime = trackPoints[0].time
+        self.lastSearchIdx = 0
+
+
     def __repr__(self):
         return "%s %s %s %d points" % (self.pilotName, self.date.strftime("%d/%m/%Y"), self.gpsReference, len(self.trackPoints))
 
+
     def searchPointInTurnpoint(self, turnpoint, notBeforeTime=None, notAfterTime=None):
-        idx = -1
-        for trackPoint in self.trackPoints:
-            idx += 1
+        if(notBeforeTime < self.lastSearchTime):
+            self.lastSearchTime = self.trackPoints[0].time
+            self.lastSearchIdx = 0
+        for trackPoint in self.trackPoints[self.lastSearchIdx:]:
+            self.lastSearchIdx += 1
             if(notAfterTime and trackPoint.time > notAfterTime):
                 break
 
             if(notBeforeTime and trackPoint.time < notBeforeTime):
                 continue
 
-            # TOREM
-            #from geopy.distance import great_circle
-            #tmp = great_circle(turnpoint.coordinates.toDegree(), trackPoint.coordinates.toDegree()).m
-            #print("%s %d %s %s" % (trackPoint.time, tmp, turnpoint.coordinates, trackPoint.coordinates))
             if(turnpoint.isContainTrackPoint(trackPoint)):
-                return idx
+                self.lastSearchTime = trackPoint.time
+                return self.lastSearchIdx
 
 
+        self.lastSearchTime = self.trackPoints[0].time
+        self.lastSearchIdx = 0
         return None
