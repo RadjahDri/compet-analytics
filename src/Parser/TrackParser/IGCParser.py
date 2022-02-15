@@ -59,7 +59,7 @@ class IGCParser(TrackParser):
 
                 line = inputFile.readline()
 
-        track = Track(pilotName, date, gpsReference, coordinates)
+        track = Track(pilotName, "", date, gpsReference, coordinates)
         return track
 
 
