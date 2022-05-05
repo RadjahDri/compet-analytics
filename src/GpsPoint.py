@@ -1,3 +1,5 @@
+from geopy.distance import great_circle
+
 ### CLASSES
 class GpsPoint:
     def __init__(self, lat, lon):
@@ -11,6 +13,9 @@ class GpsPoint:
 
     def toDegree(self):
         return (self.lat, self.lon)
+
+    def computeDistance(self, other):
+        return great_circle(self.toDegree(), other.toDegree()).m
 
     @staticmethod
     def fromDegrees(lat, lon):

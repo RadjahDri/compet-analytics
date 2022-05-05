@@ -1,5 +1,11 @@
 from TrackTurnpointStats import TrackTurnpointStats
 
+import datetime
+
+### CONSTANTS
+MAX_GLIDER_SPEED_IN_KMH = 100
+MAX_GLIDER_SPEED_IN_MS = MAX_GLIDER_SPEED_IN_KMH / 3.6
+
 ### CLASSES
 class CompetAnalytic:
     def __init__(self, task):
@@ -19,15 +25,27 @@ class CompetAnalytic:
 
         competitionTracksStats = []
         for track in self.competitorTracks:
-            currentBeginSearchTime = self.task.startTime
             trackStats = TrackTurnpointStats(track, len(self.task.turnpoints[1:]))
-            for turnpoint in self.task.turnpoints[1:]:
-                trackPointIdx = track.searchPointInTurnpoint(turnpoint, currentBeginSearchTime, self.task.endTime)
+
+            trackPoint = track.getPointAtTime(self.task.startTime)
+
+            for turnpointIdx in range(1, len(self.task.turnpoints)):
+                if(turnpointIdx == 1):
+                    currentBeginSearchTime = self.task.startTime
+                else:
+                    currentBeginSearchTime = trackPoint.time
+
+                distanceToTurnpoint = trackPoint.coordinates.computeDistance(self.task.turnpoints[turnpointIdx].coordinates) - self.task.turnpoints[turnpointIdx].radius
+                minTimeToNextTurnpoint = distanceToTurnpoint // MAX_GLIDER_SPEED_IN_MS
+                currentBeginSearchTime = addTimes(currentBeginSearchTime, minTimeToNextTurnpoint)
+
+                trackPointIdx = track.searchPointInTurnpoint(self.task.turnpoints[turnpointIdx], currentBeginSearchTime, self.task.endTime)
+
                 if(trackPointIdx == None):
                     break
                 trackStats.addTurnpointStats(trackPointIdx)
                 trackPoint = track.trackPoints[trackPointIdx+1]
-                currentBeginSearchTime = trackPoint.time
+
             competitionTracksStats.append(trackStats)
 
         competitionTracksStats.sort(reverse=True)
@@ -68,3 +86,7 @@ class CompetAnalytic:
                 outputFile.write(csvData)
 
         return csvData
+
+
+def addTimes(time, seconds):
+    return (datetime.datetime(1,1,1,time.hour, time.minute, time.second) + datetime.timedelta(0, seconds)).time()

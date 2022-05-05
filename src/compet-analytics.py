@@ -25,7 +25,8 @@ def main(args):
         if(not args.quiet):
             print("[+] Load track: %s" % track)
         competAnalytic.addCompetitorTrack(track)
-        print(track)
+        if(not args.quiet):
+            print(track)
 
 
     tracksStats = competAnalytic.getTurnpointsStats()

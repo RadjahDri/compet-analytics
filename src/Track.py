@@ -34,3 +34,9 @@ class Track:
         self.lastSearchTime = self.trackPoints[0].time
         self.lastSearchIdx = 0
         return None
+
+    def getPointAtTime(self, time):
+        for trackPoint in self.trackPoints:
+            if(time < trackPoint.time):
+                return trackPoint
+        return None
