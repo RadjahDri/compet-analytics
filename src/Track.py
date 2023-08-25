@@ -12,7 +12,7 @@ class Track:
 
 
     def __repr__(self):
-        return "%s %s %s %d points" % (self.pilotName, self.gliderName, self.date.strftime("%d/%m/%Y"), len(self.trackPoints))
+        return "%s %s %s from %s to %s %d points" % (self.pilotName, self.gliderName, self.date.strftime("%d/%m/%Y"), self.trackPoints[0].time.strftime("%H:%M:%S"), self.trackPoints[-1].time.strftime("%H:%M:%S"), len(self.trackPoints))
 
 
     def searchPointInTurnpoint(self, turnpoint, notBeforeTime=None, notAfterTime=None):
