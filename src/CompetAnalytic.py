@@ -29,22 +29,23 @@ class CompetAnalytic:
 
             trackPoint = track.getPointAtTime(self.task.startTime)
 
-            for turnpointIdx in range(1, len(self.task.turnpoints)):
-                if(turnpointIdx == 1):
-                    currentBeginSearchTime = self.task.startTime
-                else:
-                    currentBeginSearchTime = trackPoint.time
+            if(trackPoint):
+                for turnpointIdx in range(1, len(self.task.turnpoints)):
+                    if(turnpointIdx == 1):
+                        currentBeginSearchTime = self.task.startTime
+                    else:
+                        currentBeginSearchTime = trackPoint.time
 
-                distanceToTurnpoint = trackPoint.coordinates.computeDistance(self.task.turnpoints[turnpointIdx].coordinates) - self.task.turnpoints[turnpointIdx].radius
-                minTimeToNextTurnpoint = distanceToTurnpoint // MAX_GLIDER_SPEED_IN_MS
-                currentBeginSearchTime = addTimes(currentBeginSearchTime, minTimeToNextTurnpoint)
+                    distanceToTurnpoint = trackPoint.coordinates.computeDistance(self.task.turnpoints[turnpointIdx].coordinates) - self.task.turnpoints[turnpointIdx].radius
+                    minTimeToNextTurnpoint = distanceToTurnpoint // MAX_GLIDER_SPEED_IN_MS
+                    currentBeginSearchTime = addTimes(currentBeginSearchTime, minTimeToNextTurnpoint)
 
-                trackPointIdx = track.searchPointInTurnpoint(self.task.turnpoints[turnpointIdx], currentBeginSearchTime, self.task.endTime)
+                    trackPointIdx = track.searchPointInTurnpoint(self.task.turnpoints[turnpointIdx], currentBeginSearchTime, self.task.endTime)
 
-                if(trackPointIdx == None):
-                    break
-                trackStats.addTurnpointStats(trackPointIdx)
-                trackPoint = track.trackPoints[trackPointIdx+1]
+                    if(trackPointIdx == None):
+                        break
+                    trackStats.addTurnpointStats(trackPointIdx)
+                    trackPoint = track.trackPoints[trackPointIdx+1]
 
             competitionTracksStats.append(trackStats)
 
