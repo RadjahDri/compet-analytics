@@ -4,15 +4,16 @@ import datetime
 
 ### CONSTANTS
 MAX_GLIDER_SPEED_IN_KMH = 100
-MAX_GLIDER_SPEED_IN_MS = MAX_GLIDER_SPEED_IN_KMH / 3.6
+MAX_GLIDER_SPEED_IN_MS = int(MAX_GLIDER_SPEED_IN_KMH / 3.6)
 
 ### CLASSES
 class CompetAnalytic:
-    def __init__(self, task):
+    def __init__(self, task, stopTime=None):
         if(not task):
             raise ValueError("CompetAnalytic cannot be initialized with empty task")
         self.task = task
         self.competitorTracks = []
+        self.stopTime = stopTime
 
 
     def addCompetitorTrack(self, track):
@@ -23,6 +24,7 @@ class CompetAnalytic:
         if(not self.competitorTracks):
             raise ValueError("CompetAnalytic cannot generate stats without competitor tracks")
 
+        # Compute time to each turnpoint to each competitor
         competitionTracksStats = []
         for track in self.competitorTracks:
             trackStats = TrackTurnpointStats(track, len(self.task.turnpoints[1:]))
@@ -31,21 +33,22 @@ class CompetAnalytic:
 
             if(trackPoint):
                 for turnpointIdx in range(1, len(self.task.turnpoints)):
-                    if(turnpointIdx == 1):
-                        currentBeginSearchTime = self.task.startTime
-                    else:
-                        currentBeginSearchTime = trackPoint.time
+                    currentBeginSearchTime = trackPoint.time
 
-                    distanceToTurnpoint = trackPoint.coordinates.computeDistance(self.task.turnpoints[turnpointIdx].coordinates) - self.task.turnpoints[turnpointIdx].radius
-                    minTimeToNextTurnpoint = distanceToTurnpoint // MAX_GLIDER_SPEED_IN_MS
-                    currentBeginSearchTime = addTimes(currentBeginSearchTime, minTimeToNextTurnpoint)
+                    distanceToTurnpoint = trackPoint.coordinates.computeDistance(self.task.turnpoints[turnpointIdx].coordinates) - (self.task.turnpoints[turnpointIdx].radius * 1.005)
+                    if(distanceToTurnpoint > 0):
+                        minTimeToNextTurnpoint = distanceToTurnpoint // MAX_GLIDER_SPEED_IN_MS
+                        currentBeginSearchTime = addTimes(currentBeginSearchTime, minTimeToNextTurnpoint)
 
                     trackPointIdx = track.searchPointInTurnpoint(self.task.turnpoints[turnpointIdx], currentBeginSearchTime, self.task.endTime)
 
                     if(trackPointIdx == None):
                         break
-                    trackStats.addTurnpointStats(trackPointIdx)
+
                     trackPoint = track.trackPoints[trackPointIdx+1]
+                    if(self.stopTime and self.stopTime <= trackPoint.time):
+                        break
+                    trackStats.addTurnpointStats(trackPointIdx)
 
             competitionTracksStats.append(trackStats)
 

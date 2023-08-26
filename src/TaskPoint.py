@@ -11,4 +11,4 @@ class TaskPoint:
         return "%s %s %s %dm" % (self.id, self.radius, self.coordinates, self.radius)
 
     def isContainTrackPoint(self, trackPoint):
-        return great_circle(self.coordinates.toDegree(), trackPoint.coordinates.toDegree()).m <= self.radius
+        return great_circle(self.coordinates.toDegree(), trackPoint.coordinates.toDegree()).m <= self.radius * 1.005

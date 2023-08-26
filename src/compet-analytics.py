@@ -3,6 +3,7 @@ from Parser.TaskParser.FSTaskParser import FSTaskParser
 from CompetAnalytic import CompetAnalytic
 
 import argparse
+import datetime
 import os
 
 ### CONSTANTS
@@ -11,13 +12,16 @@ ALTITUDE_FILE_NAME = "altitude.csv"
 
 ### MAIN
 def main(args):
+    # Parse task file
     taskParser = FSTaskParser(args.task)
     task = taskParser.parse()
     if(not args.quiet):
         print("[+] Task:\n%s" % task)
 
-    competAnalytic = CompetAnalytic(task)
+    # Init analysis with task
+    competAnalytic = CompetAnalytic(task, args.stop)
 
+    # Add competitors tracks to this analysis
     for fileTrackName in os.listdir(args.tracks):
         fileTrackPath = os.path.join(args.tracks, fileTrackName)
         igcParser = IGCParser(fileTrackPath, args.offset)
@@ -77,6 +81,11 @@ def argumentParsing():
 		required=False,
 		default=0,
 		help="Hour offset in IGC files")
+
+	parser.add_argument("--stop",
+		type=lambda d: datetime.time.fromisoformat(d),
+		required=False,
+		help="Stop time to this task (Format: hh:mm:ss)")
 
 	return parser.parse_args()
 

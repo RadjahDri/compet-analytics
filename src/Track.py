@@ -37,6 +37,6 @@ class Track:
 
     def getPointAtTime(self, time):
         for trackPoint in self.trackPoints:
-            if(time < trackPoint.time):
+            if(time <= trackPoint.time):
                 return trackPoint
         return None
