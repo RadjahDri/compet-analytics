@@ -13,18 +13,22 @@ class TrackTurnpointStats:
             ssStats = self.getTurnpointStats(0)
             s += "SS : %s %d\n" % (ssStats.time.strftime("%H:%M:%S"), ssStats.alt)
 
-        if(self.isTurnpointPassed(self.nbTurnPoint - 1)):
-            nbPassedTurnpoint = len(self.turnpointsStats) - 2
+        if(self.isTurnpointPassed(self.nbTurnPoint - 2)):
+            nbPassedTurnpoint = len(self.turnpointsStats) - 3
         else:
-            nbPassedTurnpoint = len(self.turnpointsStats) - 1
+            nbPassedTurnpoint = len(self.turnpointsStats) - 2
 
         for turnpointIdx in range(nbPassedTurnpoint):
             trackPoint = self.getTurnpointStats(turnpointIdx + 1)
             s += "Balise %d: %s %d\n" % (turnpointIdx + 1, trackPoint.time.strftime("%H:%M:%S"), trackPoint.alt)
 
+        if(self.isTurnpointPassed(self.nbTurnPoint - 2)):
+            essStats = self.getTurnpointStats(-2)
+            s += "ESS : %s %d\n" % (essStats.time.strftime("%H:%M:%S"), essStats.alt)
+
         if(self.isTurnpointPassed(self.nbTurnPoint - 1)):
             essStats = self.getTurnpointStats(-1)
-            s += "ESS : %s %d\n" % (essStats.time.strftime("%H:%M:%S"), essStats.alt)
+            s += "Goal : %s %d\n" % (essStats.time.strftime("%H:%M:%S"), essStats.alt)
 
         return s
 
@@ -42,15 +46,15 @@ class TrackTurnpointStats:
             return self.getTurnpointStats(-1).time > other.getTurnpointStats(-1).time
 
 
-    def addTurnpointStats(self, trackPointIdx):
-        self.turnpointsStats.append(trackPointIdx)
+    def addTurnpointStats(self, trackPoint):
+        self.turnpointsStats.append(trackPoint)
 
 
     def getTurnpointStats(self, turnpointIdx):
         if((turnpointIdx >= 0 and turnpointIdx < len(self.turnpointsStats))
             or (turnpointIdx < 0 and abs(turnpointIdx+1) < len(self.turnpointsStats))
         ):
-            return self.track.trackPoints[self.turnpointsStats[turnpointIdx]]
+            return self.turnpointsStats[turnpointIdx]
         return None
 
 
@@ -90,3 +94,25 @@ class TrackTurnpointStats:
         csvData += "\n"
 
         return csvData
+
+    def exportTimeToOds(self):
+        row = []
+        for turnpointIdx in range(self.nbTurnPoint):
+            turnpointStats = self.getTurnpointStats(turnpointIdx)
+            if(turnpointStats):
+                row.append(turnpointStats.time)
+            else:
+                break
+
+        return row
+
+    def exportAltitudeToOds(self):
+        row = []
+        for turnpointIdx in range(self.nbTurnPoint):
+            turnpointStats = self.getTurnpointStats(turnpointIdx)
+            if(turnpointStats):
+                row.append(turnpointStats.alt)
+            else:
+                break
+
+        return row

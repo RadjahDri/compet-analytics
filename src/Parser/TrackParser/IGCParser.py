@@ -27,7 +27,7 @@ class IGCParser(TrackParser):
         pilotName = ""
         gliderName = ""
         gpsReference = None
-        coordinates = []
+        coordinates = {}
 
         with open(self.filePath) as inputFile:
             line = inputFile.readline()
@@ -70,7 +70,7 @@ class IGCParser(TrackParser):
 
                 elif(line.startswith("B")):
                     trackPoint = self.parseBLine(line)
-                    coordinates.append(trackPoint)
+                    coordinates[trackPoint.time] = trackPoint
 
                 line = inputFile.readline()
 

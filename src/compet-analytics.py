@@ -6,9 +6,12 @@ import argparse
 import datetime
 import os
 
+
 ### CONSTANTS
 TIME_FILE_NAME = "time.csv"
 ALTITUDE_FILE_NAME = "altitude.csv"
+# TODO change name
+ODS_FILE_NAME = "test.xls"
 
 ### MAIN
 def main(args):
@@ -18,19 +21,25 @@ def main(args):
     if(not args.quiet):
         print("[+] Task:\n%s" % task)
 
+    if(args.stop):
+        if(args.stop > task.endTime):
+            print("[-] Task stop can not be after the nominal task end. Task end: %s Stop time: %s" %(task.endTime.strftime("%H:%M:%S"), args.stop.strftime("%H:%M:%S")))
+        task.endTime = args.stop
+
     # Init analysis with task
-    competAnalytic = CompetAnalytic(task, args.stop)
+    competAnalytic = CompetAnalytic(task)
 
     # Add competitors tracks to this analysis
-    for fileTrackName in os.listdir(args.tracks):
+    idx = 1
+    tracksFilesNames = os.listdir(args.tracks)
+    for fileTrackName in tracksFilesNames:
         fileTrackPath = os.path.join(args.tracks, fileTrackName)
         igcParser = IGCParser(fileTrackPath, args.offset)
         track = igcParser.parse()
         if(not args.quiet):
-            print("[+] Load track: %s" % track)
+            print("[+] Load track: %s (%d/%d)" % (track, idx, len(tracksFilesNames)))
         competAnalytic.addCompetitorTrack(track)
-        if(not args.quiet):
-            print(track)
+        idx += 1
 
 
     tracksStats = competAnalytic.getTurnpointsStats()
@@ -44,8 +53,9 @@ def main(args):
     if(args.out):
         timeCsvOutFilePath = os.path.join(args.out, TIME_FILE_NAME)
         altCsvOutFilePath = os.path.join(args.out, ALTITUDE_FILE_NAME)
-        competAnalytic.exportTimeToCsv(tracksStats, timeCsvOutFilePath)
-        competAnalytic.exportAltitudeToCsv(tracksStats, altCsvOutFilePath)
+        xlsOutFilePath = os.path.join(args.out, ODS_FILE_NAME)
+        print("[+] Export to XLS file: %s" % xlsOutFilePath)
+        competAnalytic.exportToXls(tracksStats, xlsOutFilePath)
 
 
 def argumentParsing():
