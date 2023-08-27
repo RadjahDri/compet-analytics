@@ -10,8 +10,7 @@ import os
 ### CONSTANTS
 TIME_FILE_NAME = "time.csv"
 ALTITUDE_FILE_NAME = "altitude.csv"
-# TODO change name
-ODS_FILE_NAME = "test.xls"
+ODS_FILE_NAME = "rendu.xls"
 
 ### MAIN
 def main(args):
