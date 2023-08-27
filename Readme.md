@@ -2,19 +2,16 @@
 
 ## Description
 
-Cet outils permet d'automatiser l'extraction d'information depuis les trace GPS de pilotes durant une compétition. Il permet de récupérer pour chaque compétiteurs, les horaires de passage des balises et d'extraire le tout au format CSV.
+Cet outils permet d'automatiser l'extraction d'information depuis les trace GPS de pilotes durant une compétition. Il permet de récupérer pour chaque compétiteurs, les horaires de passage des balises et d'extraire le tout au format XLS.
 
 ## Rendu
-
-L'export CSV permet de récupérer ce types de données.
-
-![](img/renduCsv.png)
-
-Une fois, les données traitées dans une feuille de calcul préparée voici le rendu final:
+Une fois, les données traitées dans une feuille de calcul voici le rendu final:
 
 ![](img/renduFinal.png)
 
-Cet exemple de feuille de calcul est disponible à [`./calc/rendu.ods`](calc/rendu.ods).
+Cet exemple de feuille de calcul est disponible à [`./calc/rendu.xls`](calc/rendu.xls).
+
+[!WARNING] Une fois le rendu généré via le script, il est possible que votre logiciel de tableur (Libre OfficeCalc par exemple) ne calcule pas automatiquement le résultat des formules. Il faut donc demander le calcul manuel: Data > Calculate > Recalculate Hard (Ctrl + Shift + F9).
 
 ## Entrées
 
@@ -42,9 +39,8 @@ Ensuite avec le logiciel [Cargol](https://parapente.ffvl.fr/telecharger-cargol),
 
 ![](img/cargolMenu.png)
 
-Puis "Exporter" > "Toutes les traces en IGC" 
+Puis "Exporter" > "Toutes les traces en IGC"
 
 ![](img/cargolExport.png)
 
 Les traces se trouvent, en partant du dossier contenant le fichier .cpt: `<dossierAuNomDuCpt>/Export/Manche X/`.
-
