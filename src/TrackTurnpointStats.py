@@ -41,8 +41,10 @@ class TrackTurnpointStats:
         if(len(self.turnpointsStats) != len(other.turnpointsStats)):
             return len(self.turnpointsStats) < len(other.turnpointsStats)
         elif(self.nbTurnPoint == len(self.turnpointsStats)):
+            print("- %s %s" %(self.getTurnpointStats(-2).time, other.getTurnpointStats(-2).time))
             return self.getTurnpointStats(-2).time > other.getTurnpointStats(-2).time
         else:
+            print("= %s %s" %(self.getTurnpointStats(-1).time, other.getTurnpointStats(-1).time))
             return self.getTurnpointStats(-1).time > other.getTurnpointStats(-1).time
 
 
@@ -97,7 +99,7 @@ class TrackTurnpointStats:
 
     def exportTimeToOds(self):
         row = []
-        for turnpointIdx in range(self.nbTurnPoint):
+        for turnpointIdx in range(self.nbTurnPoint - 1):
             turnpointStats = self.getTurnpointStats(turnpointIdx)
             if(turnpointStats):
                 row.append(turnpointStats.time)
