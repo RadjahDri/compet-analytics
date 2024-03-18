@@ -8,7 +8,7 @@ import datetime
 import re
 
 ### CONSTANTS
-RE_DATETIME_STR = re.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}T([0-9]{2}):([0-9]{2}):([0-9]{2})\+[0-9]{2}:[0-9]{2}")
+RE_DATETIME_STR = re.compile("[0-9]{4}-[0-9]{2}-[0-9]{2}T([0-9]{2}):([0-9]{2}):([0-9]{2})(?::[0-9]{2})?\\+[0-9]{2}:[0-9]{2}")
 
 ### CLASSES
 class FSTaskParser(TaskParser):
