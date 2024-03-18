@@ -7,11 +7,12 @@ import datetime
 import re
 
 ### CONSTANTS
-RE_DATE_LINE = re.compile("HFDTEDATE:([0-9]{2})([0-9]{2})([0-9]{2})\n")
+RE_DATE_LINE = re.compile("HFDTEDATE:([0-9]{2})([0-9]{2})([0-9]{2})(?:,[0-9]{2})\n")
 RE_DATE_LINE2 = re.compile("HFDTE([0-9]{2})([0-9]{2})([0-9]{2})\n")
 RE_PILOT_NAME_LINE = re.compile("HFPLTPILOT:(.*)\n")
 RE_PILOT_NAME_LINE2 = re.compile("HFPLTPILOTINCHARGE:(.*)\n")
-RE_GLIDER_NAME_LINE = re.compile("HFGIDGLIDERID:(.*)\n")
+RE_GLIDER_NAME_LINE = re.compile("HFGTYGLIDERTYPE:(.*)\n")
+RE_GLIDER_NAME_LINE2 = re.compile("HFGIDGLIDERID:(.*)\n")
 RE_GPS_REFERENCE_LINE = re.compile("HFDTM100GPSDATUM:(.*)\n")
 RE_B_LINE = re.compile("B([0-9]{2})([0-9]{2})([0-9]{2})(.{2})(.{5})([N|S])(.{3})(.{5})([W|E])[A|V](-.{4}|.{5})(.{5})")
 
@@ -56,8 +57,14 @@ class IGCParser(TrackParser):
                         raise RuntimeError("Parsing failed: HFPLTPILOTINCHARGE is not valid")
                     pilotName = match.group(1)
 
-                elif(line.startswith("HFGIDGLIDERID:")):
+                elif(line.startswith("HFGTYGLIDERTYPE:")):
                     match = RE_GLIDER_NAME_LINE.match(line)
+                    if(not match):
+                        raise RuntimeError("Parsing failed: HFGIDGLIDERID is not valid")
+                    gliderName = match.group(1)
+
+                elif(gliderName == "" and line.startswith("HFGIDGLIDERID:")):
+                    match = RE_GLIDER_NAME_LINE2.match(line)
                     if(not match):
                         raise RuntimeError("Parsing failed: HFGIDGLIDERID is not valid")
                     gliderName = match.group(1)
@@ -89,7 +96,7 @@ class IGCParser(TrackParser):
 
         lonDegrees = int(match.group(7))
         lonMinutes = float(match.group(8)) / 1000
-        alt = int(match.group(10))
+        alt = int(match.group(11))
 
         gpsPoint = GpsPoint.fromDegreesMinutes((latDegrees, latMinutes, match.group(6)), (lonDegrees, lonMinutes, match.group(9)))
         trackPoint = TrackPoint(time, gpsPoint, alt)
