@@ -27,7 +27,10 @@ class CompetAnalytic:
             print("[+] Compute track to %s (%d/%d)" % (track.pilotName, idx, len(self.competitorTracks)))
             trackStats = TrackTurnpointStats(track, len(self.task.turnpoints[1:]))
 
-            trackPoint = track.getPointAtTime(self.task.startTime)
+            if(self.task.startTime > track.beginTime):
+                trackPoint = track.getPointAtTime(self.task.startTime)
+            else:
+                trackPoint = track.getPointAtTime(track.beginTime)
 
             if(trackPoint):
                 for turnpointIdx in range(1, len(self.task.turnpoints)):
